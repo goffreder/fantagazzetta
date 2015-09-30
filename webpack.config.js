@@ -22,7 +22,7 @@ module.exports = {
         loaders: [{
             test: /\.jsx?$/,
             exclude: /node_modules[\/\\]/,
-            loader: 'babel-loader?optional[]=es7.decorators'
+            loader: 'babel-loader?stage=0'
         }, {
             test: /\.css$/,
             loader: 'style!css'
@@ -49,7 +49,7 @@ module.exports = {
             React: 'react/addons'
         })
     ],
-    
+
     resolve: {
         extensions: ['', '.js', '.jsx']
     }

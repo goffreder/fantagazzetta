@@ -1,13 +1,8 @@
-import 'normalize-css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-class Test extends React.Component {
-    render() {
-        console.log('Test');
+import Main from './components/Main';
 
-        return (
-            <div>It works!</div>
-        );
-    }
-}
-
-React.render(<Test/>, document.getElementById('app'));
+React.render(
+    <Main />,
+    document.getElementById('app')
+);
