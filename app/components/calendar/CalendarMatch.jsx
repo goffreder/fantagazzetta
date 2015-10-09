@@ -41,7 +41,7 @@ export default class CalendarMatch extends React.Component {
             ? <td>{match.pointsB.toFixed(1)}</td>
             : null;
 
-        const scores = match.scoreA !== undefined && match.scoreB !== undefined
+        const scores = pointsA && pointsB && match.scoreA !== undefined && match.scoreB !== undefined
             ? <td>{`${match.scoreA}-${match.scoreB}`}</td>
         : null;
 
