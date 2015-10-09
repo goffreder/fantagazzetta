@@ -8,11 +8,14 @@ import RostersPage from './rosters/RostersPage';
 import PlayersPage from './players/PlayersPage';
 import CalendarPage from './calendar/CalendarPage';
 
+import EditMatchModal from './modals/EditMatchModal';
+
 const initialState = {
     players: [],
     calendar: [],
     currentTeam: null,
-    loading: true
+    loading: true,
+    editingMatch: null
 };
 
 export default class Main extends React.Component {
@@ -23,9 +26,6 @@ export default class Main extends React.Component {
             activeTab: 1,
             loadedTeams: []
         }, initialState);
-
-        this.handleSelect = this.handleSelect.bind(this);
-        this.loadTeam = this.loadTeam.bind(this);
     }
 
     componentWillMount() {
@@ -42,7 +42,7 @@ export default class Main extends React.Component {
         return initialState;
     }
 
-    handleSelect(key) {
+    handleSelect = (key) => {
         this.setState(Object.assign({}, this.getDefaultState(), {
             activeTab: key
         }));
@@ -95,7 +95,7 @@ export default class Main extends React.Component {
         }
     }
 
-    loadTeam(key) {
+    loadTeam = (key) => {
         this.setState({
             loading: true
         });
@@ -109,12 +109,24 @@ export default class Main extends React.Component {
             });
     }
 
-    handleEditMatch(day, match) {
-        console.log('editing match', match, 'of day', day);
+    handleEditMatch = (day, match) => {
+        this.setState({
+            editingMatch: Object.assign({
+                day,
+                match
+            }, this.state.calendar[day - 1].matches[match])
+        });
     }
 
     render() {
         const loader = this.state.loading ? <Loader /> : null;
+
+        const editMatchModal = (
+            <EditMatchModal
+                show={Boolean(this.state.editingMatch)}
+                match={this.state.editingMatch}
+            />
+        );
 
         return (
             <div>
@@ -134,6 +146,7 @@ export default class Main extends React.Component {
                     </Tab>
                 </Tabs>
                 {loader}
+                {editMatchModal}
             </div>
         );
     }
