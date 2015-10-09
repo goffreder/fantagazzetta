@@ -46,7 +46,8 @@ module.exports = {
             }
         }),
         new webpack.ProvidePlugin({
-            React: 'react/addons'
+            React: 'react',
+            ReactDOM: 'react-dom'
         })
     ],
 
