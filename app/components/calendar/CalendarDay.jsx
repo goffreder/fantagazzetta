@@ -19,8 +19,15 @@ export default class CalendarDay extends React.Component {
 
         const dayMatches = this.props.matches.map((match, key) => <CalendarMatch key={key} match={match} />);
 
+        const style = {
+            width: '50%',
+            minWidth: 400,
+            margin: 'auto',
+            marginBottom: 10
+        };
+
         return (
-            <Panel header={title}>
+            <Panel header={title} style={style}>
                 <Table striped bordered condensed hover>
                     <tbody>
                         {dayMatches}

@@ -9,7 +9,6 @@ import PlayersPage from './players/PlayersPage';
 import CalendarPage from './calendar/CalendarPage';
 
 const initialState = {
-    loadedTeams: [],
     players: [],
     calendar: [],
     currentTeam: null,
@@ -21,7 +20,8 @@ export default class Main extends React.Component {
         super();
 
         this.state = Object.assign({
-            activeTab: 1
+            activeTab: 1,
+            loadedTeams: []
         }, initialState);
 
         this.handleSelect = this.handleSelect.bind(this);
@@ -71,48 +71,24 @@ export default class Main extends React.Component {
                     });
                 break;
             case 3:
-                const matches = [{
-                    teamA: 'Caracass',
-                    teamB: 'Massi',
-                    scoreA: 2,
-                    scoreB: 0,
-                    pointsA: 72,
-                    pointsB: 61
-                }, {
-                    teamA: 'Baralcellona',
-                    teamB: 'Blucerchiata',
-                    // scoreA: 1,
-                    scoreB: 2,
-                    pointsA: 68.5,
-                    pointsB: 71.5
-                }, {
-                    teamA: 'Support Team',
-                    teamB: 'Cisti Gangleare United',
-                    scoreA: 0,
-                    scoreB: 1,
-                    // pointsA: 61.5,
-                    pointsB: 69.5
-                }, {
-                    teamA: 'Venu Juniors',
-                    teamB: 'Ouascicheghesemmu',
-                    scoreA: 2,
-                    // scoreB: 1,
-                    // pointsA: 74,
-                    pointsB: 68
-                }];
+                axios.get('http://localhost:3000/calendar/')
+                    .then(res => {
+                        const calendar = res.data.map(day => {
+                            const matches = day.matches.map(match => {
+                                return {
+                                    teamA: this.state.loadedTeams[match.teamA],
+                                    teamB: this.state.loadedTeams[match.teamB]
+                                };
+                            });
 
-                this.setState({
-                    calendar: [{
-                        day: 1,
-                        realDay: 7,
-                        matches
-                    }, {
-                        day: 2,
-                        realDay: 8,
-                        matches
-                    }],
-                    loading: false
-                });
+                            return Object.assign(day, { matches });
+                        });
+
+                        this.setState(Object.assign({}, this.getDefaultState(), {
+                            calendar,
+                            loading: false
+                        }));
+                    });
                 break;
             default:
                 break;

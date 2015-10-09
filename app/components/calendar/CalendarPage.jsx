@@ -21,8 +21,13 @@ export default class CalendarPage extends React.Component {
             );
         });
 
+        const style = {
+            marginTop: 20,
+            textAlign: 'center'
+        };
+
         return days.length
-            ? <div>{days}</div>
-            : <div>Calendar is not available</div>;
+            ? <div style={style}>{days}</div>
+            : <div style={style}>Calendar is not available</div>;
     }
 }

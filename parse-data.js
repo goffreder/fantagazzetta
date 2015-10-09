@@ -6,14 +6,17 @@ var assetsFolder = 'assets';
 var teamsSourceName = 'TutteLeRose.csv';
 var teamsOutputName = 'teams.json';
 var playersOutputName = 'players.json';
+var calendarSourceName = 'Calendario.csv';
+var calendarOutputName = 'calendar.json';
 
 var teams = [];
 var players = [];
 var currentTeam = {};
+var calendar = [];
 
-lr = new line([__dirname, assetsFolder, teamsSourceName].join('/'));
+var lr = new line([__dirname, assetsFolder, teamsSourceName].join('/'));
 
-lr.on('line', function (line) {
+lr.on('line', function(line) {
     var chunks = line.split(',');
     var team = {};
     var player = {};
@@ -59,4 +62,47 @@ lr.on('end', function() {
             console.log(playersOutputName + ' file correctly written');
         }
     );
+
+    loadCalendar(teams);
 });
+
+function loadCalendar(teams) {
+    var calendar = [];
+    var g1, g2;
+
+    var lr = new line([__dirname, assetsFolder, calendarSourceName].join('/'));
+
+    lr.on('line', function(line) {
+        var chunks = line.split(',');
+
+        switch(true) {
+            case chunks[0].indexOf('Giornata') === 0:
+                g1 = chunks[0].split(' ')[1];
+                g2 = chunks[6].split(' ')[1];
+
+                calendar[g1-1] = { id: +g1, day: +g1, matches: [] };
+                calendar[g2-1] = { id: +g2, day: +g2, matches: [] };
+                break;
+            default:
+                calendar[g1-1].matches.push({
+                    teamA: teams.filter(function(team) { return team.name === chunks[0]; }).pop().id,
+                    teamB: teams.filter(function(team) { return team.name === chunks[3]; }).pop().id
+                });
+                calendar[g2-1].matches.push({
+                    teamA: teams.filter(function(team) { return team.name === chunks[6]; }).pop().id,
+                    teamB: teams.filter(function(team) { return team.name === chunks[9]; }).pop().id
+                });
+                break;
+        }
+    });
+
+    lr.on('end', function() {
+        fs.writeFile(
+            [__dirname, assetsFolder, calendarOutputName].join('/'),
+            JSON.stringify(calendar),
+            function() {
+                console.log(calendarOutputName + ' file correctly written');
+            }
+        );
+    });
+};
