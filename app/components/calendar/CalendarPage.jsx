@@ -6,7 +6,8 @@ export default class CalendarPage extends React.Component {
             day: React.PropTypes.number.isRequired,
             realDay: React.PropTypes.number,
             matches: React.PropTypes.array.isRequired
-        })).isRequired
+        })).isRequired,
+        handleEditMatch: React.PropTypes.func
     }
 
     render() {
@@ -17,6 +18,9 @@ export default class CalendarPage extends React.Component {
                     day={dayData.day}
                     realDay={dayData.realDay}
                     matches={dayData.matches}
+                    handleEditMatch={match => {
+                        this.props.handleEditMatch(dayData.day, match);
+                    }}
                 />
             );
         });

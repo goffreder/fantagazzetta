@@ -1,5 +1,7 @@
 import validator from 'validator';
 
+import { Button, Glyphicon } from 'react-bootstrap';
+
 const validateInt = (props, propName, componentName) => {
     if (props[propName] !== undefined && !validator.isInt(props[propName])) {
         return new Error(
@@ -27,7 +29,8 @@ export default class CalendarMatch extends React.Component {
             scoreB: validateInt,
             pointsA: validateFloat,
             pointsB: validateFloat
-        }).isRequired
+        }).isRequired,
+        handleEditMatch: React.PropTypes.func
     }
 
     render() {
@@ -72,6 +75,7 @@ export default class CalendarMatch extends React.Component {
                 {pointsB}
                 <td colSpan={teamBColSpan}>{match.teamB}</td>
                 {scores}
+                <td><Button onClick={this.props.handleEditMatch}><Glyphicon glyph="pencil" /></Button></td>
             </tr>
         );
     }

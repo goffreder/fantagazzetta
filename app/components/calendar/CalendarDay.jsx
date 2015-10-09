@@ -6,7 +6,8 @@ export default class CalendarDay extends React.Component {
     static propTypes = {
         day: React.PropTypes.number.isRequired,
         realDay: React.PropTypes.number,
-        matches: React.PropTypes.array.isRequired
+        matches: React.PropTypes.array.isRequired,
+        handleEditMatch: React.PropTypes.func
     }
 
     render() {
@@ -17,11 +18,19 @@ export default class CalendarDay extends React.Component {
             </h3>
         );
 
-        const dayMatches = this.props.matches.map((match, key) => <CalendarMatch key={key} match={match} />);
+        const dayMatches = this.props.matches.map((match, key) => {
+            return (
+                <CalendarMatch
+                    key={key}
+                    match={match}
+                    handleEditMatch={this.props.handleEditMatch.bind(this, key)}
+                />
+            );
+        });
 
         const style = {
-            width: '50%',
-            minWidth: 400,
+            width: '60%',
+            minWidth: 450,
             margin: 'auto',
             marginBottom: 10
         };

@@ -6,7 +6,12 @@ var version = require('./package.json').version;
 module.exports = {
     devtool: process.env.NODE_ENV !== 'production' ? 'source-map' : null,
 
-    entry: './app/App.js',
+    entry: {
+        main: [
+            __dirname + '/node_modules/babel-core/browser-polyfill.js',
+            './app/App.js'
+        ]
+    },
 
     output: {
         path: '__build__',
@@ -15,6 +20,9 @@ module.exports = {
     },
 
     module: {
+        noParse: [
+            /\/babel-core\/browser-polyfill\.js$/
+        ],
         preLoaders: [{
             test: /\.jsx?$/,
             loader: 'eslint-loader'

@@ -109,6 +109,10 @@ export default class Main extends React.Component {
             });
     }
 
+    handleEditMatch(day, match) {
+        console.log('editing match', match, 'of day', day);
+    }
+
     render() {
         const loader = this.state.loading ? <Loader /> : null;
 
@@ -126,7 +130,7 @@ export default class Main extends React.Component {
                         <PlayersPage players={this.state.players} />
                     </Tab>
                     <Tab eventKey={3} title="Calendario">
-                        <CalendarPage calendar={this.state.calendar} />
+                        <CalendarPage calendar={this.state.calendar} handleEditMatch={this.handleEditMatch}/>
                     </Tab>
                 </Tabs>
                 {loader}
