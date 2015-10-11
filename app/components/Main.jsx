@@ -7,12 +7,14 @@ import Loader from './common/Loader';
 import RostersPage from './rosters/RostersPage';
 import PlayersPage from './players/PlayersPage';
 import CalendarPage from './calendar/CalendarPage';
+import StandingsPage from './standings/StandingsPage';
 
 import EditMatchModal from './modals/EditMatchModal';
 
 const initialState = {
     players: [],
     calendar: [],
+    standings: [],
     currentTeam: null,
     loading: true,
     editingMatch: null
@@ -29,84 +31,11 @@ export default class Main extends React.Component {
     }
 
     componentWillMount() {
-        axios.get('http://localhost:3000/teams')
-            .then(res => {
-                this.setState({
-                    loadedTeams: res.data.map(team => team.name),
-                    loading: false
-                });
-            });
+        this.loadTeams();
     }
 
     getDefaultState() {
         return initialState;
-    }
-
-    handleSelect = (key) => {
-        this.setState(Object.assign({}, this.getDefaultState(), {
-            activeTab: key
-        }));
-
-        switch (key) {
-            case 1:
-                axios.get('http://localhost:3000/teams')
-                    .then(res => {
-                        this.setState(Object.assign({}, this.getDefaultState(), {
-                            loadedTeams: res.data.map(team => team.name),
-                            loading: false
-                        }));
-                    });
-                break;
-            case 2:
-                axios.get('http://localhost:3000/players/?_expand=team')
-                    .then(res => {
-                        this.setState(Object.assign({}, this.getDefaultState(), {
-                            players: res.data.map(player => {
-                                player.team = player.team.name;
-
-                                return player;
-                            }),
-                            loading: false
-                        }));
-                    });
-                break;
-            case 3:
-                axios.get('http://localhost:3000/calendar/')
-                    .then(res => {
-                        const calendar = res.data.map(day => {
-                            const matches = day.matches.map(match => {
-                                match.teamA = this.state.loadedTeams[match.teamA];
-                                match.teamB = this.state.loadedTeams[match.teamB];
-
-                                return match;
-                            });
-
-                            return Object.assign(day, { matches });
-                        });
-
-                        this.setState(Object.assign({}, this.getDefaultState(), {
-                            calendar,
-                            loading: false
-                        }));
-                    });
-                break;
-            default:
-                break;
-        }
-    }
-
-    loadTeam = (key) => {
-        this.setState({
-            loading: true
-        });
-
-        axios.get('http://localhost:3000/teams/' + key + '/?_embed=players')
-            .then(res => {
-                this.setState({
-                    currentTeam: res.data,
-                    loading: false
-                });
-            });
     }
 
     handleEditMatch = (day, match) => {
@@ -143,6 +72,173 @@ export default class Main extends React.Component {
         });
     }
 
+    handleSelect = (key) => {
+        this.setState(Object.assign({}, this.getDefaultState(), {
+            activeTab: key
+        }));
+
+        switch (key) {
+            case 1:
+                this.loadTeams();
+                break;
+            case 2:
+                this.loadPlayers();
+                break;
+            case 3:
+                this.loadCalendar();
+                break;
+            case 4:
+                this.loadStandings();
+                break;
+            default:
+                break;
+        }
+    }
+
+    loadCalendar = () => {
+        axios.get('http://localhost:3000/calendar/')
+            .then(res => {
+                const calendar = res.data.map(day => {
+                    const matches = day.matches.map(match => {
+                        match.teamA = this.state.loadedTeams[match.teamA];
+                        match.teamB = this.state.loadedTeams[match.teamB];
+
+                        return match;
+                    });
+
+                    return Object.assign(day, { matches });
+                });
+
+                this.setState(Object.assign({}, this.getDefaultState(), {
+                    calendar,
+                    loading: false
+                }));
+            });
+    }
+
+    loadPlayers = () => {
+        axios.get('http://localhost:3000/players/?_expand=team')
+            .then(res => {
+                this.setState(Object.assign({}, this.getDefaultState(), {
+                    players: res.data.map(player => {
+                        player.team = player.team.name;
+
+                        return player;
+                    }),
+                    loading: false
+                }));
+            });
+    }
+
+    loadStandings = () => {
+        axios.get('http://localhost:3000/standings')
+            .then(res => {
+                this.setState(Object.assign({}, this.getDefaultState(), {
+                    standings: res.data,
+                    loading: false
+                }));
+            });
+    }
+
+    loadTeam = (key) => {
+        this.setState({
+            loading: true
+        });
+
+        axios.get('http://localhost:3000/teams/' + key + '/?_embed=players')
+            .then(res => {
+                this.setState({
+                    currentTeam: res.data,
+                    loading: false
+                });
+            });
+    }
+
+    loadTeams = () => {
+        axios.get('http://localhost:3000/teams')
+            .then(res => {
+                this.setState(Object.assign({}, this.getDefaultState(), {
+                    loadedTeams: res.data.map(team => team.name),
+                    loading: false
+                }));
+            });
+    }
+
+    reloadStandings = () => {
+        this.state.standings = [];
+
+        this.state.loadedTeams.forEach((team, id) => {
+            this.state.standings.push({
+                teamId: id,
+                teamName: team,
+                points: 0,
+                games: 0,
+                won: 0,
+                draw: 0,
+                lost: 0,
+                goalScored: 0,
+                goalAgainst: 0,
+                goalDiff: 0,
+                totalPoints: 0
+            });
+        });
+
+        this.setState({
+            loading: true
+        });
+
+        axios.get('http://localhost:3000/calendar/')
+            .then(res => {
+                res.data.map(day => {
+                    day.matches.forEach(match => {
+                        const stA = this.state.standings[match.teamA];
+                        const stB = this.state.standings[match.teamB];
+
+                        if (match.scoreA !== undefined && match.scoreB !== undefined) {
+                            if (match.scoreA === match.scoreB) {
+                                stA.draw++;
+                                stB.draw++;
+                            } else {
+                                if (match.scoreA > match.scoreB) {
+                                    stA.won++;
+                                    stB.lost++;
+                                } else {
+                                    stA.lost++;
+                                    stB.won++;
+                                }
+                            }
+
+                            stA.goalScored += parseInt(match.scoreA, 10);
+                            stB.goalScored += parseInt(match.scoreB, 10);
+
+                            stA.goalAgainst += parseInt(match.scoreB, 10);
+                            stB.goalAgainst += parseInt(match.scoreA, 10);
+
+                            stA.totalPoints += parseFloat(match.pointsA);
+                            stB.totalPoints += parseFloat(match.pointsB);
+
+                            stA.games = stA.won + stA.draw + stA.lost;
+                            stB.games = stB.won + stB.draw + stB.lost;
+
+                            stA.goalDiff = stA.goalScored - stA.goalAgainst;
+                            stB.goalDiff = stB.goalScored - stB.goalAgainst;
+
+                            stA.points = stA.won * 3 + stA.draw;
+                            stB.points = stB.won * 3 + stB.draw;
+                        }
+                    });
+                });
+
+                this.state.standings.forEach((st, id) => {
+                    axios.put('http://localhost:3000/standings/' + id, st);
+                });
+
+                this.setState({
+                    loading: false
+                });
+            });
+    }
+
     render() {
         const loader = this.state.loading ? <Loader /> : null;
 
@@ -174,6 +270,9 @@ export default class Main extends React.Component {
                     </Tab>
                     <Tab eventKey={3} title="Calendario">
                         <CalendarPage calendar={this.state.calendar} handleEditMatch={this.handleEditMatch}/>
+                    </Tab>
+                    <Tab eventKey={4} title="Classifica">
+                        <StandingsPage standings={this.state.standings} handleReloadClick={this.reloadStandings}/>
                     </Tab>
                 </Tabs>
                 {loader}

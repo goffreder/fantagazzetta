@@ -1,3 +1,5 @@
+import '../../styles/griddleStyle.css';
+
 import Griddle from 'griddle-react';
 
 import RolesList from '../common/RolesList';

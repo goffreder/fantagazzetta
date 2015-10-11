@@ -8,11 +8,13 @@ var teamsOutputName = 'teams.json';
 var playersOutputName = 'players.json';
 var calendarSourceName = 'Calendario.csv';
 var calendarOutputName = 'calendar.json';
+var standingsOutputName = 'standings.json';
 
 var teams = [];
 var players = [];
 var currentTeam = {};
 var calendar = [];
+var standings = [];
 
 var lr = new line([__dirname, assetsFolder, teamsSourceName].join('/'));
 
@@ -26,6 +28,20 @@ lr.on('line', function(line) {
             currentTeam.balance = parseInt(chunks[0].split(':')[1]);
             currentTeam.id = teams.length;
             teams.push(JSON.parse(JSON.stringify(currentTeam)));
+            standings.push({
+                id: currentTeam.id,
+                teamId: currentTeam.id,
+                teamName: currentTeam.name,
+                points: 0,
+                games: 0,
+                won: 0,
+                draw: 0,
+                lost: 0,
+                goalScored: 0,
+                goalAgainst: 0,
+                goalDiff: 0,
+                totalPoints: 0
+            });
             break;
         case chunks[1] === '':
             currentTeam.name = chunks[0];
@@ -53,6 +69,13 @@ lr.on('end', function() {
         JSON.stringify(teams),
         function() {
             console.log(teamsOutputName + ' file correctly written');
+        }
+    );
+    fs.writeFile(
+        [__dirname, assetsFolder, standingsOutputName].join('/'),
+        JSON.stringify(standings),
+        function() {
+            console.log(standingsOutputName + ' file correctly written');
         }
     );
     fs.writeFile(
