@@ -31,7 +31,7 @@
     "jsonfile": "^2.2.2",
     "line-by-line": "^0.1.4",
     "node-libs-browser": "^0.5.2",
-    "npm-check": "^4.0.3",
+    "npm-check": "^4.0.4",
     "style-loader": "^0.12.3",
     "underscore.string": "^3.2.2",
     "url-loader": "^0.5.6",

@@ -1,48 +1,80 @@
 {
   "calendar": [
     {
-      "id": 1,
       "day": 1,
       "matches": [
         {
           "teamA": 2,
-          "teamB": 6
+          "teamB": 6,
+          "scoreA": 2,
+          "scoreB": 0,
+          "pointsA": 72,
+          "pointsB": 61
         },
         {
           "teamA": 1,
-          "teamB": 5
+          "teamB": 5,
+          "scoreA": 1,
+          "scoreB": 2,
+          "pointsA": 68.5,
+          "pointsB": 71.5
         },
         {
           "teamA": 7,
-          "teamB": 4
+          "teamB": 4,
+          "scoreA": 0,
+          "scoreB": 1,
+          "pointsA": 61.5,
+          "pointsB": 69.5
         },
         {
           "teamA": 3,
-          "teamB": 0
+          "teamB": 0,
+          "scoreA": 2,
+          "scoreB": 1,
+          "pointsA": 74,
+          "pointsB": 68
         }
-      ]
+      ],
+      "id": 1
     },
     {
-      "id": 2,
       "day": 2,
       "matches": [
         {
           "teamA": 6,
-          "teamB": 3
+          "teamB": 3,
+          "scoreA": 4,
+          "scoreB": 1,
+          "pointsA": 81.5,
+          "pointsB": 67
         },
         {
           "teamA": 0,
-          "teamB": 7
+          "teamB": 7,
+          "scoreA": 0,
+          "scoreB": 1,
+          "pointsA": 64.5,
+          "pointsB": 69
         },
         {
           "teamA": 4,
-          "teamB": 1
+          "teamB": 1,
+          "scoreA": 2,
+          "scoreB": 1,
+          "pointsA": 74.5,
+          "pointsB": 70
         },
         {
           "teamA": 5,
-          "teamB": 2
+          "teamB": 2,
+          "scoreA": 1,
+          "scoreB": 0,
+          "pointsA": 68.5,
+          "pointsB": 59
         }
-      ]
+      ],
+      "id": 2
     },
     {
       "id": 3,

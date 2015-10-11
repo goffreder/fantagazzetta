@@ -1,6 +1,6 @@
 import validator from 'validator';
 
-import { Button, Glyphicon } from 'react-bootstrap';
+import { Button, Glyphicon, Input } from 'react-bootstrap';
 
 const validateInt = (props, propName, componentName) => {
     if (props[propName] !== undefined && !validator.isInt(props[propName])) {
@@ -30,23 +30,55 @@ export default class CalendarMatch extends React.Component {
             pointsA: validateFloat,
             pointsB: validateFloat
         }).isRequired,
+        editing: React.PropTypes.bool,
         handleEditMatch: React.PropTypes.func
     }
 
     render() {
+        const style = {
+            width: 75
+        };
+
         const match = this.props.match;
 
-        const pointsA = match.pointsA !== undefined && match.pointsB !== undefined
-            ? <td>{match.pointsA.toFixed(1)}</td>
-            : null;
+        let pointsA = null;
+        let pointsB = null;
+        let scores = null;
 
-        const pointsB = match.pointsA !== undefined && match.pointsB !== undefined
-            ? <td>{match.pointsB.toFixed(1)}</td>
-            : null;
+        if (this.props.editing) {
+            pointsA = (
+                <td><Input style={style} type="text" name="pointsA" defaultValue={match.pointsA} /></td>
+            );
+            pointsB = (
+                <td><Input style={style} type="text" name="pointsB" defaultValue={match.pointsB} /></td>
+            );
 
-        const scores = pointsA && pointsB && match.scoreA !== undefined && match.scoreB !== undefined
-            ? <td>{`${match.scoreA}-${match.scoreB}`}</td>
-        : null;
+            scores = (
+                <td>
+                    <Input style={style} type="text" name="scoreA" defaultValue={match.scoreA} />
+                    -
+                    <Input style={style} type="text" name="scoreB" defaultValue={match.scoreB} />
+                </td>
+            );
+        } else {
+            pointsA = match.pointsA !== undefined && match.pointsB !== undefined
+                ? <td>{match.pointsA.toFixed(1)}</td>
+                : null;
+
+            pointsB = match.pointsA !== undefined && match.pointsB !== undefined
+                ? <td>{match.pointsB.toFixed(1)}</td>
+                : null;
+
+            scores = pointsA && pointsB && match.scoreA !== undefined && match.scoreB !== undefined
+                ? <td>{`${match.scoreA}-${match.scoreB}`}</td>
+            : null;
+        }
+
+        const editMatch = this.props.handleEditMatch
+            ? (
+                <td><Button onClick={this.props.handleEditMatch}><Glyphicon glyph="pencil" /></Button></td>
+            )
+            : null;
 
         let teamAColSpan = 1;
         let teamBColSpan = 1;
@@ -75,7 +107,7 @@ export default class CalendarMatch extends React.Component {
                 {pointsB}
                 <td colSpan={teamBColSpan}>{match.teamB}</td>
                 {scores}
-                <td><Button onClick={this.props.handleEditMatch}><Glyphicon glyph="pencil" /></Button></td>
+                {editMatch}
             </tr>
         );
     }

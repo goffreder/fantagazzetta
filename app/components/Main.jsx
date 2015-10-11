@@ -75,10 +75,10 @@ export default class Main extends React.Component {
                     .then(res => {
                         const calendar = res.data.map(day => {
                             const matches = day.matches.map(match => {
-                                return {
-                                    teamA: this.state.loadedTeams[match.teamA],
-                                    teamB: this.state.loadedTeams[match.teamB]
-                                };
+                                match.teamA = this.state.loadedTeams[match.teamA];
+                                match.teamB = this.state.loadedTeams[match.teamB];
+
+                                return match;
                             });
 
                             return Object.assign(day, { matches });
@@ -118,6 +118,31 @@ export default class Main extends React.Component {
         });
     }
 
+    handleSaveEditMatch = (matchData) => {
+        const matchDay = this.state.calendar[this.state.editingMatch.day - 1];
+        const match = matchDay.matches[this.state.editingMatch.match];
+
+        Object.assign(match, matchData);
+
+        this.setState({
+            editingMatch: null
+        });
+
+        axios.put('http://localhost:3000/calendar/' + this.state.editingMatch.day, {
+            day: matchDay.day,
+            matches: matchDay.matches.map(m => {
+                return {
+                    teamA: this.state.loadedTeams.indexOf(m.teamA),
+                    teamB: this.state.loadedTeams.indexOf(m.teamB),
+                    scoreA: m.scoreA,
+                    scoreB: m.scoreB,
+                    pointsA: m.pointsA,
+                    pointsB: m.pointsB
+                };
+            })
+        });
+    }
+
     render() {
         const loader = this.state.loading ? <Loader /> : null;
 
@@ -125,6 +150,12 @@ export default class Main extends React.Component {
             <EditMatchModal
                 show={Boolean(this.state.editingMatch)}
                 match={this.state.editingMatch}
+                onSave={this.handleSaveEditMatch}
+                onClose={() => {
+                    this.setState({
+                        editingMatch: null
+                    });
+                }}
             />
         );
 
