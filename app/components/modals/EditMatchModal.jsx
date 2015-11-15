@@ -2,7 +2,11 @@ import { Modal, Button, Table } from 'react-bootstrap';
 
 import CalendarMatch from '../calendar/CalendarMatch';
 
-export default class EditMatchModal extends React.Component {
+class EditMatchModal extends React.Component {
+    constructor() {
+        super();
+    }
+
     static propTypes = {
         show: React.PropTypes.bool.isRequired,
         match: React.PropTypes.object,
@@ -71,3 +75,5 @@ export default class EditMatchModal extends React.Component {
         );
     }
 }
+
+export default EditMatchModal;
