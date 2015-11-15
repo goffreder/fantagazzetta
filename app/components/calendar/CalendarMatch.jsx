@@ -34,6 +34,12 @@ export default class CalendarMatch extends React.Component {
         handleEditMatch: React.PropTypes.func
     }
 
+    componentDidMount() {
+        if (this.refs.pointsA) {
+            this.refs.pointsA.getInputDOMNode().focus();
+        }
+    }
+
     render() {
         const style = {
             width: 75
@@ -47,17 +53,17 @@ export default class CalendarMatch extends React.Component {
 
         if (this.props.editing) {
             pointsA = (
-                <td><Input style={style} type="text" name="pointsA" defaultValue={match.pointsA} /></td>
+                <td><Input style={style} type="text" name="pointsA" ref="pointsA" defaultValue={match.pointsA} /></td>
             );
             pointsB = (
-                <td><Input style={style} type="text" name="pointsB" defaultValue={match.pointsB} /></td>
+                <td><Input style={style} type="text" name="pointsB" ref="pointsB" defaultValue={match.pointsB} /></td>
             );
 
             scores = (
                 <td>
-                    <Input style={style} type="text" name="scoreA" defaultValue={match.scoreA} />
+                    <Input style={style} type="text" name="scoreA" ref="scoreA" defaultValue={match.scoreA} />
                     -
-                    <Input style={style} type="text" name="scoreB" defaultValue={match.scoreB} />
+                    <Input style={style} type="text" name="scoreB" ref="pscoreBointsA" defaultValue={match.scoreB} />
                 </td>
             );
         } else {

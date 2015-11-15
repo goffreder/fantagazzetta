@@ -14,7 +14,7 @@ export default class StandingsPage extends React.Component {
         }
 
         const tableStyle = {
-            width: '60%',
+            width: '80%',
             margin: 'auto',
             marginTop: 20,
             marginBottom: 20
