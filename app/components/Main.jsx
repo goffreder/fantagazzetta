@@ -25,7 +25,7 @@ class Main extends React.Component {
         super();
 
         this.state = Object.assign({
-            activeTab: 1,
+            activeTab: 'teams',
             loadedTeams: []
         }, initialState);
     }
@@ -78,16 +78,16 @@ class Main extends React.Component {
         }));
 
         switch (key) {
-            case 1:
+            case 'teams':
                 this.loadTeams();
                 break;
-            case 2:
+            case 'players':
                 this.loadPlayers();
                 break;
-            case 3:
+            case 'schedule':
                 this.loadCalendar();
                 break;
-            case 4:
+            case 'standings':
                 this.loadStandings();
                 break;
             default:
@@ -258,20 +258,20 @@ class Main extends React.Component {
         return (
             <div>
                 <Tabs animation={false} activeKey={this.state.activeTab} onSelect={this.handleSelect}>
-                    <Tab eventKey={1} title="Rose">
+                    <Tab eventKey="teams" title="Rose">
                         <RostersPage
                             currentTeam={this.state.currentTeam || null}
                             teamsList={this.state.loadedTeams}
                             handleSelectTeam={this.loadTeam}
                         />
                     </Tab>
-                    <Tab eventKey={2} title="Giocatori">
+                    <Tab eventKey="players" title="Giocatori">
                         <PlayersPage players={this.state.players} />
                     </Tab>
-                    <Tab eventKey={3} title="Calendario">
+                    <Tab eventKey="schedule" title="Calendario">
                         <CalendarPage calendar={this.state.calendar} handleEditMatch={this.handleEditMatch}/>
                     </Tab>
-                    <Tab eventKey={4} title="Classifica">
+                    <Tab eventKey="standings" title="Classifica">
                         <StandingsPage standings={this.state.standings} handleReloadClick={this.reloadStandings}/>
                     </Tab>
                 </Tabs>

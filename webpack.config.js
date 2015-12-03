@@ -4,11 +4,12 @@ var description = require('./package.json').description;
 var version = require('./package.json').version;
 
 module.exports = {
-    devtool: process.env.NODE_ENV !== 'production' ? 'source-map' : null,
+    devtool: process.env.NODE_ENV !== 'production' ? 'cheap-eval-source-map' : null,
 
     entry: {
         main: [
-            // __dirname + '/node_modules/babel-core/browser-polyfill.js',
+            'webpack-dev-server/client?http://localhost:8080',
+            'webpack/hot/only-dev-server',
             './app/App.js'
         ]
     },
@@ -19,10 +20,11 @@ module.exports = {
         filename: 'build.js'
     },
 
+    devServer: {
+        hot: true
+    },
+
     module: {
-        // noParse: [
-        //     /\/babel-core\/browser-polyfill\.js$/
-        // ],
         preLoaders: [{
             test: /\.jsx?$/,
             loader: 'eslint-loader'
@@ -30,12 +32,7 @@ module.exports = {
         loaders: [{
             test: /\.jsx?$/,
             exclude: /node_modules[\/\\]/,
-            loader: 'babel',
-            query: {
-                cacheDirectory: true,
-                // plugins: ['transform-runtime'],
-                presets: ['es2015', 'react', 'stage-0']
-            }
+            loader: 'react-hot!babel'
         }, {
             test: /\.css$/,
             loader: 'style!css'
@@ -61,10 +58,12 @@ module.exports = {
         new webpack.ProvidePlugin({
             React: 'react',
             ReactDOM: 'react-dom'
-        })
+        }),
+        new webpack.HotModuleReplacementPlugin()
     ],
 
     resolve: {
-        extensions: ['', '.js', '.jsx']
+        extensions: ['', '.js', '.jsx'],
+        modulesDirectories: ['node_modules', 'app', 'components']
     }
 };
