@@ -11,6 +11,8 @@ import StandingsPage from './standings/StandingsPage';
 
 import EditMatchModal from './modals/EditMatchModal';
 
+import appStore from 'stores/appStore';
+
 const initialState = {
     players: [],
     calendar: [],
@@ -117,17 +119,30 @@ class Main extends React.Component {
     }
 
     loadPlayers = () => {
-        axios.get('http://localhost:3000/players/?_expand=team')
-            .then(res => {
-                this.setState(Object.assign({}, this.getDefaultState(), {
-                    players: res.data.map(player => {
+        let players = appStore.getPlayers();
+
+        if (players) {
+            this.setState(Object.assign({}, this.getDefaultState(), {
+                players,
+                loading: false
+            }));
+        } else {
+            axios.get('http://localhost:3000/players/?_expand=team')
+                .then(res => {
+                    players = res.data.map(player => {
                         player.team = player.team.name;
 
                         return player;
-                    }),
-                    loading: false
-                }));
-            });
+                    });
+
+                    appStore.setStore({ players });
+
+                    this.setState(Object.assign({}, this.getDefaultState(), {
+                        players,
+                        loading: false
+                    }));
+                });
+        }
     }
 
     loadStandings = () => {

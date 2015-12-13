@@ -27,7 +27,8 @@
     "jsx": true
   },
   "globals": {
-    "React": true
+    "React": true,
+    "ReactDOM": true
   },
   "rules": {
     "strict": [2, "never"],
@@ -71,7 +72,9 @@
     "no-obj-calls": 2,
     "quote-props": [2, "consistent-as-needed"],
     "no-sparse-arrays": 2,
+    "no-extra-parens": [2, "functions"],
     "no-unreachable": 2,
+    "no-undef": 2,
     "use-isnan": 2,
     "block-scoped-var": 2,
 
@@ -111,6 +114,7 @@
     "no-throw-literal": 2,
     "no-with": 2,
     "radix": 2,
+    "spaced-comment": [2, "always"],
     "vars-on-top": 2,
     "wrap-iife": [2, "any"],
     "yoda": 2,
@@ -139,7 +143,8 @@
         "afterColon": true
     }],
     "new-cap": [2, {
-      "newIsCap": true
+      "newIsCap": true,
+      "capIsNewExceptions": ["Map"]
     }],
     "no-multiple-empty-lines": [2, {
       "max": 2

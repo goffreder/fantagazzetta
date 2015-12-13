@@ -1,9 +1,9 @@
 {
-  "name": "base-react-project",
-  "description": "A base for a react project",
+  "name": "fantagazzetta",
+  "description": "Fantagazzetta",
   "version": "0.0.1",
   "main": "webpack.config.js",
-  "repository": "goffreder/base-react-project.git",
+  "repository": "goffreder/fantagazzetta.git",
   "author": "Emanuele Biancardi",
   "license": "MIT",
   "scripts": {
