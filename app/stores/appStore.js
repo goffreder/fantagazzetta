@@ -9,6 +9,18 @@ export default {
         return _store.players;
     },
 
+    getTeamPlayers(teamId) {
+        return _store.players.filter(p => p.teamId === teamId);
+    },
+
+    getCalendar() {
+        return _store.calendar;
+    },
+
+    getStandings() {
+        return _store.standings;
+    },
+
     getStore() {
         return _store;
     },

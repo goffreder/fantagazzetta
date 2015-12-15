@@ -67,7 +67,11 @@ class EditMatchModal extends React.Component {
         }
 
         if (!this.props.match.boxScoreA || !this.props.match.boxScoreB) {
-            return null;
+            return (
+                <Button bsStyle="primary" onClick={() => this.setState({ showLineups: !this.state.showLineups })}>
+                    Add Lineups
+                </Button>
+            );
         }
 
         return (

@@ -98,24 +98,35 @@ class Main extends React.Component {
     }
 
     loadCalendar = () => {
-        axios.get('http://localhost:3000/calendar/')
-            .then(res => {
-                const calendar = res.data.map(day => {
-                    const matches = day.matches.map(match => {
-                        match.teamA = this.state.loadedTeams[match.teamA];
-                        match.teamB = this.state.loadedTeams[match.teamB];
+        let calendar = appStore.getCalendar();
 
-                        return match;
+        if (calendar) {
+            this.setState(Object.assign({}, this.getDefaultState(), {
+                calendar,
+                loading: false
+            }));
+        } else {
+            axios.get('http://localhost:3000/calendar/')
+                .then(res => {
+                    calendar = res.data.map(day => {
+                        const matches = day.matches.map(match => {
+                            match.teamA = this.state.loadedTeams[match.teamA];
+                            match.teamB = this.state.loadedTeams[match.teamB];
+
+                            return match;
+                        });
+
+                        return Object.assign(day, { matches });
                     });
 
-                    return Object.assign(day, { matches });
-                });
+                    appStore.setStore({ calendar });
 
-                this.setState(Object.assign({}, this.getDefaultState(), {
-                    calendar,
-                    loading: false
-                }));
-            });
+                    this.setState(Object.assign({}, this.getDefaultState(), {
+                        calendar,
+                        loading: false
+                    }));
+                });
+        }
     }
 
     loadPlayers = () => {
@@ -146,13 +157,28 @@ class Main extends React.Component {
     }
 
     loadStandings = () => {
-        axios.get('http://localhost:3000/standings')
-            .then(res => {
-                this.setState(Object.assign({}, this.getDefaultState(), {
-                    standings: res.data,
-                    loading: false
-                }));
-            });
+        let standings = appStore.getStandings();
+
+        console.log(standings);
+
+        if (standings) {
+            this.setState(Object.assign({}, this.getDefaultState(), {
+                standings,
+                loading: false
+            }));
+        } else {
+            axios.get('http://localhost:3000/standings')
+                .then(res => {
+                    standings = res.data;
+
+                    appStore.setStore({ standings });
+
+                    this.setState(Object.assign({}, this.getDefaultState(), {
+                        standings,
+                        loading: false
+                    }));
+                });
+        }
     }
 
     loadTeam = (key) => {

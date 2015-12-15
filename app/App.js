@@ -1,14 +1,18 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
+import './styles/bootstrap.override.css';
 
-import Main from './components/Main';
-
-ReactDOM.render(
-    <Main />,
-    document.getElementById('app')
-);
-
-// import CalendarBoxScore from 'calendar/CalendarBoxScore';
+// import Main from './components/Main';
 //
+// ReactDOM.render(
+//     <Main />,
+//     document.getElementById('app')
+// );
+
+import CalendarBoxScore from 'calendar/CalendarBoxScore';
+
+import appStore from 'stores/appStore';
+import axios from 'axios';
+
 // const lineup = [{
 //     102: 4.5
 // }, {
@@ -34,11 +38,22 @@ ReactDOM.render(
 // }, {
 //     116: 6
 // }];
-//
-// ReactDOM.render( < CalendarBoxScore scheme = "442"
-//     lineup = {
-//         lineup
-//     }
-//     />,
-//     document.getElementById('app')
-// );
+
+axios.get('http://localhost:3000/players/?_expand=team')
+    .then(res => {
+        const players = res.data.map(player => {
+            player.team = player.team.name;
+
+            return player;
+        });
+
+        appStore.setStore({ players });
+
+        ReactDOM.render(
+            <CalendarBoxScore
+                teamId={0}
+                editing
+            />,
+            document.getElementById('app')
+        );
+    });

@@ -1,6 +1,6 @@
-import { Table } from 'react-bootstrap';
+import { Button, Table } from 'react-bootstrap';
 
-import RoleBox from 'common/RoleBox';
+import CalendarBoxScoreEntry from './CalendarBoxScoreEntry';
 
 import schemes from 'constants/schemes';
 
@@ -11,11 +11,13 @@ export default class CalendarBoxScore extends React.Component {
         super(props);
 
         this.state = {
-            editing: false
+            editing: props.editing,
+            scheme: null
         };
     }
 
     static propTypes = {
+        teamId: React.PropTypes.number.isRequired,
         scheme: React.PropTypes.oneOf([
             '343',
             '3412',
@@ -30,35 +32,37 @@ export default class CalendarBoxScore extends React.Component {
             '4222'
         ]),
         lineup: React.PropTypes.arrayOf(React.PropTypes.object),
-        homeTeam: React.PropTypes.bool
+        homeTeam: React.PropTypes.bool,
+        editing: React.PropTypes.bool
     }
 
     handleSchemeSelection = (e) => {
-        console.log(e.target.value);
+        this.setState({
+            scheme: e.target.value
+        });
     }
 
-    getPositionBox = (position) => {
-        let box = null;
+    startEditing = () => {
+        this.setState({
+            editing: true
+        });
+    }
 
-        switch (true) {
-            case typeof position === 'string':
-                box = <RoleBox>{position}</RoleBox>;
-                break;
-            case position === undefined:
-                box = null;
-                break;
-            default:
-                box = position.map(p => <RoleBox key={p}>{p}</RoleBox>);
-                break;
-        }
-
-        return box;
+    saveLineup = () => {
+        this.setState({
+            editing: false,
+            scheme: null
+        });
     }
 
     render() {
         const styles = {
             borderless: {
                 border: 'none'
+            },
+            button: {
+                float: 'right',
+                marginBottom: 10
             }
         };
 
@@ -73,7 +77,7 @@ export default class CalendarBoxScore extends React.Component {
             </select>
         );
 
-        const schemePositions = schemes[this.props.scheme];
+        const schemePositions = schemes[this.state.scheme || this.props.scheme];
 
         let starters = [];
         let startersTable = null;
@@ -90,26 +94,32 @@ export default class CalendarBoxScore extends React.Component {
 
                 const playerData = store.getPlayer(Number(playerId));
 
-                if (schemePosition === undefined) {
-                    substitutes.push((
-                        <tr key={i}>
-                            <td>{this.getPositionBox(playerData.roles)}</td>
-                            <td>{`${playerData.name} (${playerData.realTeam})`}</td>
-                            <td>{playerPoints}</td>
-                        </tr>
-                    ));
-                } else {
-                    starters.push((
-                        <tr key={i}>
-                            <td>{this.getPositionBox(schemePosition)}</td>
-                            <td>{`${playerData.name} (${playerData.realTeam})`}</td>
-                            <td>{playerPoints || '-'}</td>
-                        </tr>
-                    ));
-                }
+                const entry = (
+                    <CalendarBoxScoreEntry
+                        key={i}
+                        {...playerData}
+                        roles={schemePosition || playerData.roles}
+                        points={playerPoints}
+                        editing={this.state.editing}
+                    />
+                );
+
+                schemePosition ? starters.push(entry) : substitutes.push(entry);
 
                 total += playerPoints;
             });
+
+            if (this.state.editing) {
+                while (substitutes.length <= 2) {
+                    substitutes.push(
+                        <CalendarBoxScoreEntry
+                            key={starters.length + substitutes.length}
+                            teamId={this.props.teamId}
+                            editing
+                        />
+                    );
+                }
+            }
 
             startersTable = (
                 <Table>
@@ -127,18 +137,29 @@ export default class CalendarBoxScore extends React.Component {
                 </Table>
             );
 
-            totalsTable = (
-                <Table style={{ textAlign: 'center' }}>
-                    <tbody>
-                        <tr><td style={styles.borderless}><strong>Totale:</strong></td><td style={styles.borderless}><strong>{total}</strong></td></tr>
-                    </tbody>
-                </Table>
-            );
+            totalsTable = this.state.editing
+                ? null
+                : (
+                    <Table style={{ textAlign: 'center' }}>
+                        <tbody>
+                            <tr><td style={styles.borderless}><strong>Totale:</strong></td><td style={styles.borderless}><strong>{total}</strong></td></tr>
+                        </tbody>
+                    </Table>
+                );
         }
 
         return (
             <div {...this.props}>
-                <h3>{this.state.editing ? schemeSelector : this.props.scheme.split('').join('-')}</h3>
+                <h3>
+                    {this.state.editing ? schemeSelector : this.props.scheme.split('').join('-')}
+                    <Button
+                        bsStyle={this.state.editing ? 'success' : 'primary'}
+                        style={styles.button}
+                        onClick={this.state.editing ? this.saveLineup : this.startEditing}
+                    >
+                        {this.state.editing ? 'Save Lineup' : 'Edit Lineup'}
+                    </Button>
+                </h3>
                 {startersTable}
                 Sostituzioni: {substitutesTable}
                 {totalsTable}
