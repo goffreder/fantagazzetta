@@ -42,7 +42,7 @@
     "webpack-dev-server": "^1.10.1"
   },
   "dependencies": {
-    "axios": "^0.7.0",
+    "axios": "^0.8.1",
     "bootstrap": "^3.3.5",
     "flux": "^2.0.3",
     "griddle-react": "^0.3.0",

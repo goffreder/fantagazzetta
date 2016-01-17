@@ -47,7 +47,7 @@ class Main extends React.Component {
                 match
             }, this.state.calendar[day - 1].matches[match])
         });
-    }
+    };
 
     handleSaveEditMatch = (matchData) => {
         const matchDay = this.state.calendar[this.state.editingMatch.day - 1];
@@ -72,7 +72,7 @@ class Main extends React.Component {
                 };
             })
         });
-    }
+    };
 
     handleSelect = (key) => {
         this.setState(Object.assign({}, this.getDefaultState(), {
@@ -95,7 +95,7 @@ class Main extends React.Component {
             default:
                 break;
         }
-    }
+    };
 
     loadCalendar = () => {
         let calendar = appStore.getCalendar();
@@ -127,7 +127,7 @@ class Main extends React.Component {
                     }));
                 });
         }
-    }
+    };
 
     loadPlayers = () => {
         let players = appStore.getPlayers();
@@ -154,7 +154,7 @@ class Main extends React.Component {
                     }));
                 });
         }
-    }
+    };
 
     loadStandings = () => {
         let standings = appStore.getStandings();
@@ -179,7 +179,7 @@ class Main extends React.Component {
                     }));
                 });
         }
-    }
+    };
 
     loadTeam = (key) => {
         this.setState({
@@ -193,7 +193,7 @@ class Main extends React.Component {
                     loading: false
                 });
             });
-    }
+    };
 
     loadTeams = () => {
         axios.get('http://localhost:3000/teams')
@@ -203,7 +203,7 @@ class Main extends React.Component {
                     loading: false
                 }));
             });
-    }
+    };
 
     reloadStandings = () => {
         this.state.standings = [];
@@ -278,7 +278,7 @@ class Main extends React.Component {
                     loading: false
                 });
             });
-    }
+    };
 
     render() {
         const loader = this.state.loading ? <Loader /> : null;

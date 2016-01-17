@@ -34,26 +34,26 @@ export default class CalendarBoxScore extends React.Component {
         lineup: React.PropTypes.arrayOf(React.PropTypes.object),
         homeTeam: React.PropTypes.bool,
         editing: React.PropTypes.bool
-    }
+    };
 
     handleSchemeSelection = (e) => {
         this.setState({
             scheme: e.target.value
         });
-    }
+    };
 
     startEditing = () => {
         this.setState({
             editing: true
         });
-    }
+    };
 
     saveLineup = () => {
         this.setState({
             editing: false,
             scheme: null
         });
-    }
+    };
 
     render() {
         const styles = {

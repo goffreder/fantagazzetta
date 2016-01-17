@@ -6,7 +6,7 @@ export default class StandingsPage extends React.Component {
     static propTypes = {
         standings: React.PropTypes.array.isRequired,
         handleReloadClick: React.PropTypes.func
-    }
+    };
 
     render() {
         if (this.props.standings.length === 0) {

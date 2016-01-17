@@ -8,7 +8,7 @@ export default class CalendarDay extends React.Component {
         realDay: React.PropTypes.number,
         matches: React.PropTypes.array.isRequired,
         handleEditMatch: React.PropTypes.func
-    }
+    };
 
     render() {
         const title = (

@@ -17,7 +17,7 @@ export default class CalendarBoxScoreEntry extends React.Component {
         realTeam: React.PropTypes.string,
         points: React.PropTypes.number,
         editing: React.PropTypes.bool
-    }
+    };
 
     getRolesBox = (roles) => {
         let box = null;
@@ -35,7 +35,7 @@ export default class CalendarBoxScoreEntry extends React.Component {
         }
 
         return box;
-    }
+    };
 
     render() {
         const styles = {

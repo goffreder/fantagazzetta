@@ -19,11 +19,11 @@ class EditMatchModal extends React.Component {
         match: React.PropTypes.object,
         onSave: React.PropTypes.func,
         onClose: React.PropTypes.func
-    }
+    };
 
     static defaultProps = {
         onClose: () => {}
-    }
+    };
 
     handleClose = () => {
         this.setState({
@@ -31,7 +31,7 @@ class EditMatchModal extends React.Component {
         });
 
         this.props.onClose();
-    }
+    };
 
     handleEditSave = () => {
         const elems = this.refs.matchForm.elements;
@@ -55,7 +55,7 @@ class EditMatchModal extends React.Component {
         }
 
         this.props.onSave(matchData);
-    }
+    };
 
     getShowLineupsButton = () => {
         if (!appStore.getPlayers()) {
@@ -79,7 +79,7 @@ class EditMatchModal extends React.Component {
                 {this.state.showLineups ? 'Hide Lineups' : 'Show Lineups'}
             </Button>
         );
-    }
+    };
 
     getBoxScores = () => {
         let boxScoreA = null;
@@ -110,7 +110,7 @@ class EditMatchModal extends React.Component {
         }
 
         return boxScores;
-    }
+    };
 
     render() {
         const title = this.props.match !== null

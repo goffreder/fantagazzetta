@@ -32,7 +32,7 @@ export default class CalendarMatch extends React.Component {
         }).isRequired,
         editing: React.PropTypes.bool,
         handleEditMatch: React.PropTypes.func
-    }
+    };
 
     componentDidMount() {
         if (this.refs.pointsA) {

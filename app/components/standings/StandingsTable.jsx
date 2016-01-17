@@ -17,7 +17,7 @@ export default class StandingsTable extends React.Component {
             goalDiff: React.PropTypes.number.isRequired,
             totalPoints: React.PropTypes.number.isRequired
         })).isRequired
-    }
+    };
 
     render() {
         const columnMeta = [{

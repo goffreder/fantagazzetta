@@ -8,7 +8,7 @@ export default class CalendarPage extends React.Component {
             matches: React.PropTypes.array.isRequired
         })).isRequired,
         handleEditMatch: React.PropTypes.func
-    }
+    };
 
     render() {
         const days = this.props.calendar.map((dayData, key) => {
